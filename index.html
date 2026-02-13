@@ -1,28 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Happy Valentine's Day</title>
-  <style>
-    body {
-      background-color: #ffe6eb;
-      font-family: Arial;
-      text-align: center;
-      padding-top: 80px;
-    }
-    h1 {
-      color: #ff3366;
-      font-size: 40px;
-    }
-    p {
-      font-size: 20px;
-    }
-  </style>
-</head>
 <body>
 
-<h1>Happy Valentine's Day ❤️</h1>
-<p>This page is just for you.</p>
-<p>You make my days better.</p>
+<h1>Will you be my Valentine? ❤️</h1>
+
+<button onclick="sayYes()">Yes</button>
+<button id="noBtn">No</button>
+
+<script>
+function sayYes() {
+  alert("Yay ❤️");
+}
+
+const noBtn = document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover", () => {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 50);
+
+  noBtn.style.position = "absolute";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
+</script>
 
 </body>
-</html>
