@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Valentine</title>
-
   <style>
     body {
       background: #ffe6eb;
@@ -51,51 +50,36 @@
     }
   </style>
 </head>
-
 <body>
-
 <h1>Will you be my Valentine? ❤️</h1>
-
-<!-- IMAGE -->
 <img src="https://raw.githubusercontent.com/FinedWiid/valentine/main/valentine.jpg" alt="valentine">
-
 <div class="buttons">
   <button class="yesBtn">Yes</button>
   <button id="noBtn">No</button>
 </div>
-
 <script>
 let yesSize = 1;
 let noSize = 1;
-
 const noBtn = document.getElementById("noBtn");
 const buttonsDiv = document.querySelector(".buttons");
 
-// Handle Yes clicks
 function yesClicked(btn) {
   alert("Yay!!! ❤️");
 }
 
-// Handle No clicks
 noBtn.onclick = () => {
-  // Yes grows
-  yesSize += 0.4;
-
-  // Multiply Yes button
+  yesSize += 0.2;
   const yesBtn = document.createElement("button");
   yesBtn.className = "yesBtn";
   yesBtn.innerText = "Yes";
   yesBtn.style.transform = `scale(${yesSize})`;
   yesBtn.onclick = () => yesClicked(yesBtn);
-
   buttonsDiv.appendChild(yesBtn);
 
-  
   noSize -= 0.1;
   if (noSize < 0.3) noSize = 0.3;
   noBtn.style.transform = `scale(${noSize})`;
 
-  // teleport No button
   const x = Math.random() * (window.innerWidth - 120);
   const y = Math.random() * (window.innerHeight - 60);
   noBtn.style.position = "absolute";
@@ -103,66 +87,5 @@ noBtn.onclick = () => {
   noBtn.style.top = y + "px";
 };
 </script>
-
-</body>
-</html>      transition: 0.2s;
-    }
-
-    #yesBtn {
-      background-color: #ff4d6d;
-      color: white;
-    }
-
-    #noBtn {
-      background-color: #888;
-      color: white;
-      position: relative;
-    }
-  </style>
-</head>
-
-<body>
-
-<h1>Will you be my Valentine? ❤️</h1>
-
-<!-- IMAGE -->
-<img src="https://raw.githubusercontent.com/FinedWiid/valentine/main/valentine.jpg" alt="valentine">
-
-<div class="buttons">
-  <button id="yesBtn">Yes</button>
-  <button id="noBtn">No</button>
-</div>
-
-<script>
-let yesSize = 1;
-let noSize = 1;
-
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-
-yesBtn.onclick = () => {
-  alert("Yay!!! ❤️");
-};
-
-noBtn.onclick = () => {
-  
-  yesSize += 0.4;
-  yesBtn.style.transform = `scale(${yesSize})`;
-
-  
-  noSize -= 0.1;
-  if (noSize < 0.3) noSize = 0.3;
-  noBtn.style.transform = `scale(${noSize})`;
-
-  
-  const x = Math.random() * (window.innerWidth - 120);
-  const y = Math.random() * (window.innerHeight - 60);
-
-  noBtn.style.position = "absolute";
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-};
-</script>
-
 </body>
 </html>
