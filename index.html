@@ -156,6 +156,7 @@
       background: linear-gradient(145deg, #8e8e8e 0%, #6b6b6b 100%);
       color: rgba(255, 255, 255, 0.95);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.15s ease, box-shadow 0.2s ease, left 0.2s ease-out, top 0.2s ease-out;
     }
 
     .celebration {
@@ -289,9 +290,9 @@ function teleport(btn) {
   btn.style.top = y + "px";
 }
 
-// No button runs away when cursor gets near
-const RUN_AWAY_DIST = 160;
-const RUN_AWAY_STEP = 36;
+// No button smoothly moves away when cursor gets near (no teleport, just motion)
+const RUN_AWAY_DIST = 140;
+const RUN_AWAY_STEP = 14;
 
 document.addEventListener("mousemove", (e) => {
   const rect = noBtn.getBoundingClientRect();
@@ -301,7 +302,6 @@ document.addEventListener("mousemove", (e) => {
   const dy = e.clientY - btnCenterY;
   const dist = Math.hypot(dx, dy);
   if (dist < RUN_AWAY_DIST && dist > 0) {
-    // (nx, ny) = direction from button to cursor; move button the opposite way
     const nx = dx / dist;
     const ny = dy / dist;
     const w = rect.width;
