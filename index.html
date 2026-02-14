@@ -282,12 +282,17 @@ function yesClicked() {
 }
 celebration.onclick = () => celebration.classList.remove("active");
 
+// Fixed buttons must live in body so they're not clipped by card's backdrop-filter
+const FIXED_LAYER_Z = 5;
+
 function teleport(btn) {
+  if (btn.parentNode !== document.body) document.body.appendChild(btn);
   const x = Math.random() * (window.innerWidth - 120);
   const y = Math.random() * (window.innerHeight - 60);
   btn.style.position = "fixed";
   btn.style.left = x + "px";
   btn.style.top = y + "px";
+  btn.style.zIndex = FIXED_LAYER_Z;
 }
 
 // No button stays inside this area (run-away + teleport)
@@ -314,10 +319,13 @@ function clampNoToArea(left, top) {
 }
 
 function teleportNoToArea() {
+  if (noBtn.parentNode !== document.body) document.body.appendChild(noBtn);
+  noBtn.style.zIndex = FIXED_LAYER_Z;
   const b = getNoBtnBounds();
-  if (b.maxLeft <= b.minLeft || b.maxTop <= b.minTop) return;
-  const x = b.minLeft + Math.random() * (b.maxLeft - b.minLeft);
-  const y = b.minTop + Math.random() * (b.maxTop - b.minTop);
+  const maxLeft = Math.max(b.minLeft, b.maxLeft);
+  const maxTop = Math.max(b.minTop, b.maxTop);
+  const x = b.minLeft + Math.random() * Math.max(1, maxLeft - b.minLeft);
+  const y = b.minTop + Math.random() * Math.max(1, maxTop - b.minTop);
   noBtn.style.position = "fixed";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
@@ -336,6 +344,8 @@ document.addEventListener("mousemove", (e) => {
   const dy = e.clientY - btnCenterY;
   const dist = Math.hypot(dx, dy);
   if (dist < RUN_AWAY_DIST && dist > 0) {
+    if (noBtn.parentNode !== document.body) document.body.appendChild(noBtn);
+    noBtn.style.zIndex = FIXED_LAYER_Z;
     const nx = dx / dist;
     const ny = dy / dist;
     let newLeft = rect.left - nx * RUN_AWAY_STEP;
