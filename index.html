@@ -295,16 +295,20 @@ function teleport(btn) {
   btn.style.zIndex = FIXED_LAYER_Z;
 }
 
-// No button stays inside this area (run-away + teleport). Smaller margin = more room to run in all directions.
-const RUN_AREA_MARGIN = 12;
+// No button stays inside this area. Use % so there's equal room in ALL directions (no slow top-left).
+const RUN_AREA_PCT = 0.08;
 
 function getNoBtnBounds() {
   const rect = noBtn.getBoundingClientRect();
+  const minLeft = window.innerWidth * RUN_AREA_PCT;
+  const maxLeft = window.innerWidth * (1 - RUN_AREA_PCT) - rect.width;
+  const minTop = window.innerHeight * RUN_AREA_PCT;
+  const maxTop = window.innerHeight * (1 - RUN_AREA_PCT) - rect.height;
   return {
-    minLeft: RUN_AREA_MARGIN,
-    maxLeft: window.innerWidth - rect.width - RUN_AREA_MARGIN,
-    minTop: RUN_AREA_MARGIN,
-    maxTop: window.innerHeight - rect.height - RUN_AREA_MARGIN,
+    minLeft,
+    maxLeft: Math.max(minLeft, maxLeft),
+    minTop,
+    maxTop: Math.max(minTop, maxTop),
     w: rect.width,
     h: rect.height
   };
