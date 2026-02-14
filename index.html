@@ -156,7 +156,7 @@
       background: linear-gradient(145deg, #8e8e8e 0%, #6b6b6b 100%);
       color: rgba(255, 255, 255, 0.95);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      transition: transform 0.15s ease, box-shadow 0.2s ease, left 0.45s ease-out, top 0.45s ease-out;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
     }
 
     .celebration {
@@ -337,7 +337,7 @@ function teleportNoToArea() {
 
 let noPressedOnce = false;
 const RUN_AWAY_DIST = 200;
-const RUN_AWAY_STEP = 10;
+const RUN_AWAY_STEP = 12;
 
 document.addEventListener("mousemove", (e) => {
   if (!noPressedOnce) return;
@@ -350,7 +350,7 @@ document.addEventListener("mousemove", (e) => {
   if (dist > 0 && dist < RUN_AWAY_DIST) {
     if (noBtn.parentNode !== document.body) document.body.appendChild(noBtn);
     noBtn.style.zIndex = FIXED_LAYER_Z;
-    // Random direction (any angle) so it can go up, down, left, right – not stuck bottom-right
+    // Random direction every time; no transition on left/top so position is accurate and all directions work
     const angle = Math.random() * Math.PI * 2;
     const nx = Math.cos(angle);
     const ny = Math.sin(angle);
