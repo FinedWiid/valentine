@@ -156,7 +156,7 @@
       background: linear-gradient(145deg, #8e8e8e 0%, #6b6b6b 100%);
       color: rgba(255, 255, 255, 0.95);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      transition: transform 0.15s ease, box-shadow 0.2s ease, left 0.2s ease-out, top 0.2s ease-out;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, left 0.45s ease-out, top 0.45s ease-out;
     }
 
     .celebration {
@@ -290,11 +290,45 @@ function teleport(btn) {
   btn.style.top = y + "px";
 }
 
-// No button smoothly moves away when cursor gets near (no teleport, just motion)
-const RUN_AWAY_DIST = 140;
-const RUN_AWAY_STEP = 14;
+// No button stays inside this area (run-away + teleport)
+const RUN_AREA_MARGIN = 24;
+
+function getNoBtnBounds() {
+  const rect = noBtn.getBoundingClientRect();
+  return {
+    minLeft: RUN_AREA_MARGIN,
+    maxLeft: window.innerWidth - rect.width - RUN_AREA_MARGIN,
+    minTop: RUN_AREA_MARGIN,
+    maxTop: window.innerHeight - rect.height - RUN_AREA_MARGIN,
+    w: rect.width,
+    h: rect.height
+  };
+}
+
+function clampNoToArea(left, top) {
+  const b = getNoBtnBounds();
+  return {
+    left: Math.max(b.minLeft, Math.min(b.maxLeft, left)),
+    top: Math.max(b.minTop, Math.min(b.maxTop, top))
+  };
+}
+
+function teleportNoToArea() {
+  const b = getNoBtnBounds();
+  if (b.maxLeft <= b.minLeft || b.maxTop <= b.minTop) return;
+  const x = b.minLeft + Math.random() * (b.maxLeft - b.minLeft);
+  const y = b.minTop + Math.random() * (b.maxTop - b.minTop);
+  noBtn.style.position = "fixed";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+let noPressedOnce = false;
+const RUN_AWAY_DIST = 130;
+const RUN_AWAY_STEP = 8;
 
 document.addEventListener("mousemove", (e) => {
+  if (!noPressedOnce) return;
   const rect = noBtn.getBoundingClientRect();
   const btnCenterX = rect.left + rect.width / 2;
   const btnCenterY = rect.top + rect.height / 2;
@@ -304,15 +338,12 @@ document.addEventListener("mousemove", (e) => {
   if (dist < RUN_AWAY_DIST && dist > 0) {
     const nx = dx / dist;
     const ny = dy / dist;
-    const w = rect.width;
-    const h = rect.height;
     let newLeft = rect.left - nx * RUN_AWAY_STEP;
     let newTop = rect.top - ny * RUN_AWAY_STEP;
-    newLeft = Math.max(8, Math.min(window.innerWidth - w - 8, newLeft));
-    newTop = Math.max(8, Math.min(window.innerHeight - h - 8, newTop));
+    const c = clampNoToArea(newLeft, newTop);
     noBtn.style.position = "fixed";
-    noBtn.style.left = newLeft + "px";
-    noBtn.style.top = newTop + "px";
+    noBtn.style.left = c.left + "px";
+    noBtn.style.top = c.top + "px";
   }
 });
 
@@ -321,15 +352,17 @@ buttonsDiv.addEventListener("click", (e) => {
 });
 
 noBtn.onclick = () => {
+  noPressedOnce = true;
+
   messageIndex = (messageIndex + 1) % messages.length;
   mainHeading.textContent = messages[messageIndex].main;
   subHeading.textContent = messages[messageIndex].sub;
 
-  // No: shrink and teleport
+  // No: shrink and teleport (within same run area)
   noSize -= 0.1;
   if (noSize < 0.3) noSize = 0.3;
   noBtn.style.transform = `scale(${noSize})`;
-  teleport(noBtn);
+  teleportNoToArea();
 
   // Yes: add one more (bigger) and teleport every Yes button
   yesSize += 0.2;
