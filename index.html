@@ -357,7 +357,8 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 
-buttonsDiv.addEventListener("click", (e) => {
+// Use document so Yes buttons work after they're moved to body by teleport()
+document.addEventListener("click", (e) => {
   if (e.target.classList.contains("yesBtn")) yesClicked();
 });
 
