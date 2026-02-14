@@ -298,18 +298,20 @@ noBtn.onclick = () => {
   mainHeading.textContent = messages[messageIndex].main;
   subHeading.textContent = messages[messageIndex].sub;
 
+  // No: shrink and teleport
+  noSize -= 0.1;
+  if (noSize < 0.3) noSize = 0.3;
+  noBtn.style.transform = `scale(${noSize})`;
+  teleport(noBtn);
+
+  // Yes: add one more (bigger) and teleport every Yes button
   yesSize += 0.2;
   const yesBtn = document.createElement("button");
   yesBtn.className = "yesBtn";
   yesBtn.innerText = "Yes";
   yesBtn.style.transform = `scale(${yesSize})`;
   buttonsDiv.appendChild(yesBtn);
-  teleport(yesBtn);
-
-  noSize -= 0.1;
-  if (noSize < 0.3) noSize = 0.3;
-  noBtn.style.transform = `scale(${noSize})`;
-  teleport(noBtn);
+  document.querySelectorAll(".yesBtn").forEach(teleport);
 };
 </script>
 </body>
