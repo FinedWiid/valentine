@@ -48,16 +48,68 @@
       background-color: #ff4d6d;
       color: white;
     }
+
+    .hearts-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart-rain {
+      position: absolute;
+      top: -50px;
+      color: #ff3366;
+      opacity: 0.6;
+      font-size: 24px;
+      animation: fall linear forwards;
+      text-shadow: 0 0 8px rgba(255, 51, 102, 0.4);
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+      }
+    }
   </style>
 </head>
 <body>
-<h1>Will you be my Valentine? ❤️</h1>
-<img src="https://raw.githubusercontent.com/FinedWiid/valentine/main/valentine.jpg" alt="valentine">
-<div class="buttons">
+<div class="hearts-bg" id="heartsBg"></div>
+<h1 style="position: relative; z-index: 1;">Will you be my Valentine? ❤️</h1>
+<img src="https://raw.githubusercontent.com/FinedWiid/valentine/main/valentine.jpg" alt="valentine" style="position: relative; z-index: 1;">
+<div class="buttons" style="position: relative; z-index: 1;">
   <button class="yesBtn">Yes</button>
   <button id="noBtn">No</button>
 </div>
 <script>
+(function rainHearts() {
+  const container = document.getElementById("heartsBg");
+  const hearts = ["❤", "♥", "💕", "💗"];
+  let heartId = 0;
+
+  function createHeart() {
+    const el = document.createElement("span");
+    el.className = "heart-rain";
+    el.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    el.style.left = Math.random() * 100 + "%";
+    el.style.fontSize = (14 + Math.random() * 20) + "px";
+    el.style.animationDuration = (4 + Math.random() * 6) + "s";
+    el.style.animationDelay = Math.random() * 2 + "s";
+    el.dataset.id = ++heartId;
+    container.appendChild(el);
+    setTimeout(() => {
+      if (el.parentNode) el.remove();
+    }, 12000);
+  }
+
+  setInterval(createHeart, 300);
+  for (let i = 0; i < 12; i++) setTimeout(createHeart, i * 250);
+})();
+
 let yesSize = 1;
 let noSize = 1;
 const noBtn = document.getElementById("noBtn");
