@@ -295,8 +295,8 @@ function teleport(btn) {
   btn.style.zIndex = FIXED_LAYER_Z;
 }
 
-// No button stays inside this area (run-away + teleport)
-const RUN_AREA_MARGIN = 24;
+// No button stays inside this area (run-away + teleport). Smaller margin = more room to run in all directions.
+const RUN_AREA_MARGIN = 12;
 
 function getNoBtnBounds() {
   const rect = noBtn.getBoundingClientRect();
@@ -332,7 +332,8 @@ function teleportNoToArea() {
 }
 
 let noPressedOnce = false;
-const RUN_AWAY_DIST = 130;
+// Trigger zone: same distance on all sides so it runs away whether cursor is top-left or bottom-right
+const RUN_AWAY_DIST = 200;
 const RUN_AWAY_STEP = 8;
 
 document.addEventListener("mousemove", (e) => {
@@ -343,7 +344,7 @@ document.addEventListener("mousemove", (e) => {
   const dx = e.clientX - btnCenterX;
   const dy = e.clientY - btnCenterY;
   const dist = Math.hypot(dx, dy);
-  if (dist < RUN_AWAY_DIST && dist > 0) {
+  if (dist > 0 && dist < RUN_AWAY_DIST) {
     if (noBtn.parentNode !== document.body) document.body.appendChild(noBtn);
     noBtn.style.zIndex = FIXED_LAYER_Z;
     const nx = dx / dist;
