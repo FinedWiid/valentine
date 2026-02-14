@@ -336,9 +336,8 @@ function teleportNoToArea() {
 }
 
 let noPressedOnce = false;
-// Trigger zone: same distance on all sides so it runs away whether cursor is top-left or bottom-right
 const RUN_AWAY_DIST = 200;
-const RUN_AWAY_STEP = 8;
+const RUN_AWAY_STEP = 10;
 
 document.addEventListener("mousemove", (e) => {
   if (!noPressedOnce) return;
@@ -351,10 +350,12 @@ document.addEventListener("mousemove", (e) => {
   if (dist > 0 && dist < RUN_AWAY_DIST) {
     if (noBtn.parentNode !== document.body) document.body.appendChild(noBtn);
     noBtn.style.zIndex = FIXED_LAYER_Z;
-    const nx = dx / dist;
-    const ny = dy / dist;
-    let newLeft = rect.left - nx * RUN_AWAY_STEP;
-    let newTop = rect.top - ny * RUN_AWAY_STEP;
+    // Random direction (any angle) so it can go up, down, left, right – not stuck bottom-right
+    const angle = Math.random() * Math.PI * 2;
+    const nx = Math.cos(angle);
+    const ny = Math.sin(angle);
+    let newLeft = rect.left + nx * RUN_AWAY_STEP;
+    let newTop = rect.top + ny * RUN_AWAY_STEP;
     const c = clampNoToArea(newLeft, newTop);
     noBtn.style.position = "fixed";
     noBtn.style.left = c.left + "px";
