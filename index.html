@@ -289,6 +289,33 @@ function teleport(btn) {
   btn.style.top = y + "px";
 }
 
+// No button runs away when cursor gets near
+const RUN_AWAY_DIST = 160;
+const RUN_AWAY_STEP = 36;
+
+document.addEventListener("mousemove", (e) => {
+  const rect = noBtn.getBoundingClientRect();
+  const btnCenterX = rect.left + rect.width / 2;
+  const btnCenterY = rect.top + rect.height / 2;
+  const dx = e.clientX - btnCenterX;
+  const dy = e.clientY - btnCenterY;
+  const dist = Math.hypot(dx, dy);
+  if (dist < RUN_AWAY_DIST && dist > 0) {
+    // (nx, ny) = direction from button to cursor; move button the opposite way
+    const nx = dx / dist;
+    const ny = dy / dist;
+    const w = rect.width;
+    const h = rect.height;
+    let newLeft = rect.left - nx * RUN_AWAY_STEP;
+    let newTop = rect.top - ny * RUN_AWAY_STEP;
+    newLeft = Math.max(8, Math.min(window.innerWidth - w - 8, newLeft));
+    newTop = Math.max(8, Math.min(window.innerHeight - h - 8, newTop));
+    noBtn.style.position = "fixed";
+    noBtn.style.left = newLeft + "px";
+    noBtn.style.top = newTop + "px";
+  }
+});
+
 buttonsDiv.addEventListener("click", (e) => {
   if (e.target.classList.contains("yesBtn")) yesClicked();
 });
